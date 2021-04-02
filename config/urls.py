@@ -6,6 +6,7 @@ from webchat import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('accounts.urls')),
     path('ws/<str:room>', views.websocket_server),
-    path('webchat/', include('webchat.urls')),
+    path('webchat/', include('webchat.urls', namespace='webchat')),
 ]

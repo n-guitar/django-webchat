@@ -4,7 +4,7 @@ from .connection import WebSocket, Headers
 
 def websockets(app):
     async def asgi(scope, receive, send):
-        await print_websocket_item(scope, receive, send)
+        # await print_websocket_item(scope, receive, send)
         if scope["type"] == "websocket":
             match = resolve(scope["raw_path"])
             await match.func(WebSocket(scope, receive, send), *match.args, **match.kwargs)

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webchat',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -119,3 +120,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# login後のリダイレクト
+LOGIN_REDIRECT_URL = 'webchat:top'
+
+# logout後のリダイレクト
+LOGOUT_REDIRECT_URL = 'login'
