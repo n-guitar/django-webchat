@@ -21,16 +21,16 @@ clients = {}
 
 
 async def websocket_view(socket, room):
-    print(room)
+    room_path = "/ws/" + room
     await socket.accept()
-    # key = socket.headers.as_dict['sec-websocket-key']
-    # clients[key] = socket
+    key = socket.headers['sec-websocket-key']
+    clients[key] = socket
     try:
         while True:
             data = await socket.receive()
-            await socket.send_text(data['text'])
-            # for client in clients.values():
-            #     await client.send_text("ID: {} => {}".format(key, data['text']))
+            for client in clients.values():
+                if client.path == room_path:
+                    await client.send_text("ID: {} => {}".format(key, data['text']))
     except:
         await socket.close()
-        # del clients[key]
+        del clients[key]
