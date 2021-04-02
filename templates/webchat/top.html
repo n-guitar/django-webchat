@@ -1,7 +1,14 @@
-top
-
 {% if user.is_authenticated %}
-        {{ user.username }}
-    {% else %}
-        <a href="{% url 'login' %}">Login</a></li>
-    {% endif %}
+    {{ user.username }}
+{% else %}
+    <a href="{% url 'login' %}">Login</a></li>
+{% endif %}
+
+
+<h1>Top Page</h1>
+<ul>
+    {% for item in object_list %}
+        <li>{{ item.id }}: <a href="{% url 'webchat:chat_room' item.id %}">{{ item.name }}</a>: {{ item.topic }}: {{ item.is_private }}</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'webchat:create_channel' %}">create channel</a>
