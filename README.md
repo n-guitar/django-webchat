@@ -20,6 +20,7 @@ $ python manage.py runserver
 
 # branch
 
-| branch name                                                                      | overview                                       |
-| -------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [simple-webchat](https://github.com/n-guitar/django-webchat/tree/simple-webchat) | webchat サンプル room 毎にブロードキャストする |
+| branch name                                                                                          | overview                                                                 |
+| ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| [simple-webchat](https://github.com/n-guitar/django-webchat/tree/simple-webchat)                     | webchat サンプル room 毎にブロードキャストする                           |
+| [webchat-display-username](https://github.com/n-guitar/django-webchat/tree/webchat-display-username) | signup/login 追加 & チャットルームでメッセージを送信した username を表示 |
