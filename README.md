@@ -17,3 +17,9 @@ $ django-admin startproject config .
 $ django-admin startapp webchat
 $ python manage.py runserver
 ```
+
+# branch
+
+| branch name                                                                      | overview                                       |
+| -------------------------------------------------------------------------------- | ---------------------------------------------- |
+| [simple-webchat](https://github.com/n-guitar/django-webchat/tree/simple-webchat) | webchat サンプル room 毎にブロードキャストする |

@@ -20,7 +20,7 @@ def chat_room(request, room):
 clients = {}
 
 
-async def websocket_view(socket, room):
+async def websocket_server(socket, room):
     room_path = "/ws/" + room
     await socket.accept()
     key = socket.headers['sec-websocket-key']
