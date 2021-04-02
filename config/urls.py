@@ -21,6 +21,6 @@ from webchat import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ws/', views.websocket_view),
+    path('ws/<str:room>', views.websocket_view),
     path('webchat/', include('webchat.urls')),  # 追加
 ]
