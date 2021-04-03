@@ -8,7 +8,7 @@
 <h1>Top Page</h1>
 <ul>
     {% for item in object_list %}
-        <li>{{ item.id }}: <a href="{% url 'webchat:chat_room' item.id %}">{{ item.name }}</a>: {{ item.topic }}: {{ item.is_private }}</li>
+        <li>{{ item.id }}: <a href="{% url 'webchat:chat_room' item.id %}">{{ item.name }}</a>: {{ item.topic }}: {{ item.is_private }}: {{ item.created_at }}</li>
     {% endfor %}
 </ul>
 <a href="{% url 'webchat:create_channel' %}">create channel</a>
