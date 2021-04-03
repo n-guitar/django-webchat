@@ -62,13 +62,10 @@ async def websocket_server(socket, room):
             data = await socket.receive()
             data_list = data['text'].split(',')
             username, user_id, message = data_list[0], data_list[1], data_list[2]
+            await message_save(channel_id=room, user_id=user_id, message=message)
             for i, client in enumerate(clients.values()):
                 if client.path == room_path:
-                    print("----------")
-                    print(username, user_id, message)
                     await client.send_text("{} => {}".format(username, message))
-                    if i == 0:
-                        await message_save(channel_id=room, user_id=user_id, message=message)
     except:
         await socket.close()
         del clients[key]
