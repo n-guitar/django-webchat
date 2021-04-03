@@ -18,8 +18,6 @@ class CreateChannel(generic.CreateView):
     fields = ('name', 'topic', 'is_private')
     success_url = reverse_lazy('webchat:top')
 
-#  Message.objects.select_related('channel').values('channel__name','channel_id','user__username','user__id','message').get(channel_id=4)
-
 
 class ChatRoom(LoginRequiredMixin, generic.TemplateView):
     template_name = 'webchat/chat_room.html'
