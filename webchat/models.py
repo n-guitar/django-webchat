@@ -13,11 +13,12 @@ class Channel(models.Model):
 
 
 class Message(models.Model):
-    cnannel_id = models.ForeignKey(
+    channel = models.ForeignKey(
         Channel, on_delete=models.SET_NULL, null=True)
-    user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True)
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return ("id:{}, cnannel_id:{}, user_id:{}".format(self.id, self.cnannel_id, self.user_id))
+        return ("id:{}, cnannel:{}, user:{}".format(self.id, self.channel, self.user))

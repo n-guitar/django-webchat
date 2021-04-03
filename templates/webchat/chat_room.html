@@ -13,6 +13,13 @@
             <input id="textMessage" type="text" />
             <input id="sendMessage" value="Send" type="button" />
         </form>
+
+        <ul>
+            {% for message in message_all%}
+            <li>{{ message.user__username }} => {{ message.message }}</li>
+            {% endfor %}
+        </ul>
+
         <script>
             let webSocket = new WebSocket(
                 "ws://127.0.0.1:8000/ws/{{ room_id }}"
@@ -28,7 +35,9 @@
             };
 
             send_button.addEventListener("click", () => {
-                send_message = "{{ user.username }}\," + text_message.value;
+                send_message =
+                    "{{ user.username }}\, {{ user.id }}\," +
+                    text_message.value;
                 sendMessage(send_message);
             });
 
