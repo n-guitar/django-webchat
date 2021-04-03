@@ -8,30 +8,34 @@
     </head>
     <body>
         <h1>{{ room_name }} room</h1>
-        <textarea id="messageTextArea" rows="10" cols="50"></textarea>
-        <form>
-            <input id="textMessage" type="text" />
-            <input id="sendMessage" value="Send" type="button" />
-        </form>
+        <div id="status"></div>
 
-        <ul>
+        <ul id="messageArea">
             {% for message in message_all%}
             <li>{{ message.user__username }} => {{ message.message }}</li>
             {% endfor %}
         </ul>
 
+        <form>
+            <input id="textMessage" type="text" />
+            <input id="sendMessage" value="Send" type="button" />
+        </form>
         <script>
             let webSocket = new WebSocket(
                 "ws://127.0.0.1:8000/ws/{{ room_id }}"
             );
             let text_message = document.querySelector("#textMessage");
             let send_button = document.querySelector("#sendMessage");
+            let message_area = document.querySelector("#messageArea");
+            let status = document.querySelector("#status");
 
             webSocket.onopen = () => {
-                messageTextArea.value += "Server connect...\n";
+                status.innerText = "Server connect...";
             };
             webSocket.onmessage = (message) => {
-                messageTextArea.value += message.data + "\n";
+                let newLi = document.createElement("li");
+                newLi.innerText = message.data;
+                message_area.appendChild(newLi);
             };
 
             send_button.addEventListener("click", () => {
