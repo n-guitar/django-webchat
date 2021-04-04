@@ -1,50 +1,203 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>{{ room_name }}</title>
-    </head>
-    <body>
-        <h1>{{ room_name }} room</h1>
-        <textarea id="messageTextArea" rows="10" cols="50"></textarea>
-        <form>
-            <input id="textMessage" type="text" />
-            <input id="sendMessage" value="Send" type="button" />
-        </form>
+{% extends 'webchat/base.html' %} {% block Content %}
+<style>
+    html,
+    body,
+    .grid-container {
+        height: 100%;
+        margin: 0;
+    }
+    .grid-container {
+        display: grid;
+        grid-template-columns: 20% 80%;
+        grid-template-rows: 8% 84% 8%;
+        gap: 0% 0%;
+        grid-template-areas:
+          "user_detail channel_top"
+          "channel_list channel_message"
+          "channel_option channel_send";
+      }
 
+      .channel_top {
+          grid-area: channel_top;
+          background-color: FFFFFF;
+        }
+
+      .channel_message {
+          grid-area: channel_message;
+          background-color: FFFFFF;
+          overflow-y: scroll;
+        }
+      .messageArea > ul {
+          padding:0;
+      }
+      .message_box {
+          padding: 2px;
+      }
+      .message_box:hover {
+        background-color:#e6e6e6
+    }
+      .message_user {
+          font-weight: bold;
+          font-size: small;
+      }
+
+      .channel_send { grid-area: channel_send; background-color:FFFFFF }
+
+      .channel_send_form {
+          padding: 1px;
+          margin: 10px;
+      }
+
+      .channel_send_form_text {
+          width: 90%;
+          height: 30px;
+      }
+      .channel_send_form_button {
+        width: 8%;
+        height: 35px;
+      }
+
+      .user_detail { grid-area: user_detail;background-color: #1A1D21;color: #FFFFFF }
+      .user_detail:hover {
+        background-color:#000000
+      }
+
+      .user_detail > .username {
+        margin-left: 20px;
+        margin-top: 20px;
+      }
+
+      .channel_list {
+          grid-area: channel_list;
+          background-color:#1A1D21;
+          color: #FFFFFF;
+        }
+
+
+
+        .channel_list > ul {
+            list-style: none;
+            padding: 0;
+        }
+        .channel_list_box:hover {
+            background-color:#000000;
+        }
+        .channel_list_box > li {
+            margin-left: 20px;
+            padding: 1px;
+        }
+        .channel_list_box > li > a {
+            text-decoration: none;
+        }
+        .channel_list_box > li > a:link,a:visited,a:hover,a:active {
+          color: #FFFFFF;
+
+        }
+
+        .channel_option { grid-area: channel_option;background-color: #1A1D21;color: #FFFFFF }
+
+        .channel_option > .channel_option_link {
+            margin-left: 20px;
+            margin-top: 20px;
+          }
+
+</style>
+<div class="grid-container">
+    <div class="user_detail">
+        <div class="username">
+            {{ user.username }}
+        </div>
+    </div>
+    <div class="channel_list">
         <ul>
-            {% for message in message_all%}
-            <li>{{ message.user__username }} => {{ message.message }}</li>
+            {% for channel in channel_list %}
+            <div class="channel_list_box">
+                    <li><a href="{% url 'webchat:chat_room' channel.id %}"># {{ channel }}</a></li>
+            </div>
             {% endfor %}
         </ul>
+    </div>
+    <div class="channel_option">
+        <div class="channel_option_link">
+           <a href="{% url 'webchat:create_channel' %}">create channel</a>
+        </div>
+    </div>
+    <div class="channel_top">
+        <div class="channel_name"># {{ room_name }} </div>
+        <div id="status"></div>
+    </div>
+    <div class="channel_message">
+        <div class="messageArea">
+            <ul id="messageList">
+                {% for message in message_all %}
+                <div class="message_box">
+                    <li>
+                        <div class="message_user">
+                            {{ message.user__username }} {{ message.created_at }}
+                        </div>
+                        <div class="message_text">
+                            {{ message.message }}
+                        </div>
+                    </li>
+                </div>
+                {% endfor %}
+            </ul>
+        </div>
 
-        <script>
-            let webSocket = new WebSocket(
-                "ws://127.0.0.1:8000/ws/{{ room_id }}"
-            );
-            let text_message = document.querySelector("#textMessage");
-            let send_button = document.querySelector("#sendMessage");
+    </div>
+        <div class="channel_send">
+            <div class="channel_send_form">
+                <input
+                    id="textMessage"
+                    type="text"
+                    class="channel_send_form_text"
+                    placeholder="{{ room_name }} room へmessageを送信"
+                />
+                <button
+                    class="channel_send_form_button"
+                    type="button"
+                    id="sendMessage"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
 
-            webSocket.onopen = () => {
-                messageTextArea.value += "Server connect...\n";
-            };
-            webSocket.onmessage = (message) => {
-                messageTextArea.value += message.data + "\n";
-            };
+    </div>
 
-            send_button.addEventListener("click", () => {
-                send_message =
-                    "{{ user.username }}\, {{ user.id }}\," +
-                    text_message.value;
-                sendMessage(send_message);
-            });
+    <script>
+        let webSocket = new WebSocket("ws://127.0.0.1:8000/ws/{{ room_id }}");
+        let text_message = document.querySelector("#textMessage");
+        let send_button = document.querySelector("#sendMessage");
+        let message_area = document.querySelector("#messageList");
+        let channel_message = document.querySelector(".channel_message");
+        let status = document.querySelector("#status");
 
-            function sendMessage(message) {
-                webSocket.send(message);
-                text_message.value = "";
-            }
-        </script>
-    </body>
-</html>
+        channel_message.scroll(0, channel_message.scrollHeight);
+
+        webSocket.onopen = () => {
+            status.innerText = "Server connect...";
+        };
+        webSocket.onmessage = (message) => {
+            let newLi = document.createElement("li");
+            newLi.classList.add("list-group-item");
+            newLi.innerText = message.data;
+            message_area.appendChild(newLi);
+            channel_message.scroll(0, channel_message.scrollHeight);
+        };
+
+        send_button.addEventListener("click", () => {
+            send_message =
+                "{{ user.username }}\, {{ user.id }}\," + text_message.value;
+            sendMessage(send_message);
+        });
+
+        function sendMessage(message) {
+            webSocket.send(message);
+            text_message.value = "";
+        }
+    </script>
+
+    {% endblock Content %}
+</div>
