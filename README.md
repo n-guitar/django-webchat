@@ -26,3 +26,4 @@ $ python manage.py runserver
 | [webchat-display-username](https://github.com/n-guitar/django-webchat/tree/webchat-display-username)       | signup/login 追加 & チャットルームでメッセージを送信した username を表示 |
 | [webchat-create-channel](https://github.com/n-guitar/django-webchat/tree/webchat-create-channel)           | channel db table の作成 & channel list の表示と作成                      |
 | [webchat-async-database-save](https://github.com/n-guitar/django-webchat/tree/webchat-async-database-save) | 送信した message を非同期で database へ保存する                          |
+| [webchat-chat-room-design](https://github.com/n-guitar/django-webchat/tree/webchat-chat-room-design)       | chet room を slack モドキのスタイル追加                                  |
