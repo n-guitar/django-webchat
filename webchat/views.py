@@ -27,12 +27,14 @@ class ChatRoom(LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         room_id = self.kwargs.get('room_id')
         room_name = Channel.objects.get(id=room_id)
+        channel_list = Channel.objects.all()
         message_all = Message.objects.select_related('channel').values(
-            'channel__name', 'channel_id', 'user__username', 'user__id', 'message').filter(channel_id=room_id)
+            'channel__name', 'channel_id', 'user__username', 'user__id', 'message', 'created_at', 'channel__topic').filter(channel_id=room_id)
         context = {
             'room_id': room_id,
             'room_name': room_name,
-            'message_all': message_all
+            'message_all': message_all,
+            'channel_list': channel_list
         }
         return context
 
@@ -65,7 +67,7 @@ async def websocket_server(socket, room):
             await message_save(channel_id=room, user_id=user_id, message=message)
             for i, client in enumerate(clients.values()):
                 if client.path == room_path:
-                    await client.send_text("{} => {}".format(username, message))
+                    await client.send_text("{} {}".format(username, message))
     except:
         await socket.close()
         del clients[key]
